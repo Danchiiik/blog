@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     #libs
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
+    'drf_yasg',
+    
     
     #apps
     'applications.account',
@@ -142,5 +145,20 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.IsAuthenticated',
-    # ]
+    # # ]
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 1,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 1,
+}
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS':{
+        'api_key':{
+            'type':'apiKey',
+            'in':'header',
+            'name': 'Authorization'
+        }
+    }
 }

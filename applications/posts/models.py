@@ -26,6 +26,13 @@ class Post(models.Model):
     def __str__(self) -> str:
         return self.title
     
+    class Meta:
+        ordering = ['-id']
+        
+        
+    def save(self):
+        pass
+    
     
 class Comment(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='comments', null=True)
