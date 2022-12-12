@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 User = get_user_model()
 
@@ -13,12 +14,13 @@ class Category(models.Model):
         return self.name
     
     
+    
 class Post(models.Model):
     title = models.CharField(max_length=80)
     description = models.TextField(null=True, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
-    image = models.ImageField(upload_to='images/')
+    # image = models.ImageField(upload_to='images/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -30,8 +32,13 @@ class Post(models.Model):
         ordering = ['-id']
         
         
-    def save(self):
-        pass
+    
+    
+    
+class Image(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='images/')
+        
     
     
 class Comment(models.Model):
@@ -41,11 +48,31 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    
-    
     def __str__(self) -> str:
         return f'{self.owner.username} {self.post.title}'
     
+   
+    
+class Like(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes') 
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    like = models.BooleanField(default=False)
+    
+    def __str__(self) -> str:
+        return f'{self.owner} - {self.like}'
     
     
     
+    
+class Rating(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.SmallIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ], blank=True, null=True
+    )
+    
+    def __str__(self) -> str:
+        return f'{self.owner} - {self.rating}'
