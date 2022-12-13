@@ -29,13 +29,12 @@ class PostSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
         request = self.context.get('request')
-        images_data = request.FILES
+        files_data = request.FILES
         
-        # TODO: save pictures and in admin show likes for each picture
         post = Post.objects.create(**validated_data)
         
-        for image in images_data.getlist('images'):
-            Post.objects.create(post=post, images=image)  
+        for image in files_data.getlist('images'):
+            Image.objects.create(post=post, image=image)  
         return post
         
         
